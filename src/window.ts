@@ -30,6 +30,17 @@ export class Window {
         raylib.ClearBackground(color.rgb);
     }
 
+    /**
+     * Draw text (using default font)
+     *
+     * @note fontSize work like in any drawing program but if fontSize is lower than font-base-size, then font-base-size is used
+     * @note chars spacing is proportional to fontSize
+     *
+     * @param text - Text to draw
+     * @param position - Position where text should be drawn. Expects a Vec2 or a tuple of two numbers
+     * @param fontSize - Font size in pixels
+     * @param color - Text color
+     */
     drawText(text: string, position: Vec2, fontSize: number, color: Color): void;
     drawText(text: string, position: [number, number], fontSize: number, color: Color): void;
     drawText(a: string, b: Vec2 | [number, number], c: number, d: Color) {
@@ -41,6 +52,9 @@ export class Window {
         }
     }
 
+    /**
+     * Close window and unload OpenGL context
+     */
     close() {
         raylib.CloseWindow();
     }

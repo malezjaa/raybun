@@ -1,0 +1,14 @@
+{
+  "name": "raybun",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "playground": "cd playground && bun run src/index.ts"
+  }
+}

@@ -36,4 +36,8 @@ export class Window {
             raylib.DrawText(text, b[0], b[1], c, d.rgb);
         }
     }
+
+    close() {
+        raylib.CloseWindow();
+    }
 }

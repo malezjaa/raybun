@@ -9,8 +9,12 @@ export class Window {
         raylib.InitWindow(width, height, ptr(Buffer.from(title)));
     }
 
+    shouldClose() {
+        return raylib.WindowShouldClose();
+    }
+
     mainLoop(cb: () => void) {
-        while (!raylib.WindowShouldClose()) {
+        while (!this.shouldClose()) {
             raylib.BeginDrawing();
             cb();
             raylib.EndDrawing();

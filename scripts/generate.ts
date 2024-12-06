@@ -177,10 +177,89 @@ export const { symbols: raylib } = dlopen(path, {
 });
 `;
 
-const outputPath = "../src/bindings.ts";
-await writeFile(outputPath, generatedCode);
+await writeFile("../src/bindings.ts", generatedCode);
 console.log(`Generated ${functions.length} functions with ${faults.length} faults.`);
 
 for (const fault of faults) {
+    console.log(`${styleText("yellow", "warn")} ${fault}`);
+}
+
+/// Enums
+
+let enumsFaults: string[] = [];
+type ParsedEnum = {
+    name: string;
+    values: { name: string, value?: number, comment?: string }[];
+}
+let enums: ParsedEnum[] = [];
+
+function generateEnums(node: SyntaxNode) {
+    if (node.type === "enum_specifier") {
+        let name = node.nextSibling?.text;
+
+        if (name === "bool") {
+            return;
+        }
+
+        if (!name) {
+            enumsFaults.push("Enum without name");
+            return;
+        }
+
+        let values: { name: string, value?: number, comment?: string }[] = [];
+
+        let valuesNode = node.children.find((n) => n.type === "enumerator_list");
+
+        for (const child of valuesNode?.children || []) {
+            if (child.type === "enumerator") {
+                let value = child.children.find((n) => n.type === "number_literal");
+                let comment;
+                if (child?.nextSibling?.type === ",") {
+                    comment = child?.nextSibling?.nextSibling?.text
+                } else if (child?.nextSibling?.type === "comment") {
+                    comment = child?.nextSibling?.text
+                }
+                values.push({
+                    name: child.children.find((n) => n.type === "identifier")?.text || "",
+                    value: value ? parseInt(value.text) : undefined,
+                    comment
+                });
+            }
+        }
+
+        enums.push({name, values});
+    }
+
+    for (const child of node.children) {
+        generateEnums(child);
+    }
+}
+
+generateEnums(tree.rootNode);
+
+let generatedEnumsCode = ``
+
+for (const enumDef of enums) {
+    console.log(enumDef.values)
+    generatedEnumsCode += `export enum ${enumDef.name} {`
+
+    for (const value of enumDef.values) {
+        let comment = value.comment ? ` ${value.comment}` : "";
+        if (value.value !== undefined) {
+            generatedEnumsCode += `
+    ${value.name} = ${value.value},${comment}`;
+        } else {
+            generatedEnumsCode += `
+    ${value.name},${comment}`;
+        }
+    }
+
+    generatedEnumsCode += `\n}\n`;
+}
+
+await writeFile("../src/enums.ts", generatedEnumsCode);
+console.log(`Generated ${enums.length} enums with ${enumsFaults.length} faults.`);
+
+for (const fault of enumsFaults) {
     console.log(`${styleText("yellow", "warn")} ${fault}`);
 }

@@ -3,9 +3,13 @@ import {ptr} from "bun:ffi";
 import {Color} from "./color.ts";
 import {Vec2} from "./vectors.ts";
 import {cstr} from "./index.ts";
+import {ConfigFlags} from "./enums.ts";
 
 export class Window {
-    constructor(title: string, width: number, height: number) {
+    constructor(title: string, width: number, height: number, flags?: ConfigFlags[]) {
+        for (const flag of flags || []) {
+            raylib.SetConfigFlags(flag);
+        }
         raylib.InitWindow(width, height, ptr(Buffer.from(title)));
     }
 
@@ -72,7 +76,7 @@ export class Window {
     minimize() {
         raylib.MinimizeWindow();
     }
-    
+
     /**
      * Set window state: not minimized/maximized
      */
@@ -149,14 +153,14 @@ export class Window {
     isReady() {
         return raylib.IsWindowReady();
     }
-    
+
     /**
      * Check if window is currently fullscreen
      */
     isFullscreen() {
         return raylib.IsWindowFullscreen();
     }
-    
+
     /**
      * Check if window is currently hidden
      */
@@ -170,7 +174,7 @@ export class Window {
     isMinimized() {
         return raylib.IsWindowMinimized();
     }
-    
+
     /**
      * Check if window is currently maximized
      */

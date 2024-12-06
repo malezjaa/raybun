@@ -1,6 +1,7 @@
 import Parser, {type SyntaxNode} from "tree-sitter";
 import C from "tree-sitter-c";
 import {writeFile} from "fs/promises";
+import {styleText} from "util"
 
 const parser = new Parser();
 parser.setLanguage(C);
@@ -9,7 +10,7 @@ const code = await Bun.file("./raylib.h").text();
 const tree = parser.parse(code);
 
 const functions: string[] = [];
-let faults = 0;
+const faults: string[] = [];
 const structs: string[] = [];
 
 /**
@@ -40,8 +41,7 @@ const extractType = (children: SyntaxNode[]): ParsedType => {
                 type.qualifiers.push(child.text);
                 break;
             default:
-                faults++;
-            // console.warn("Unknown type node:", child.type, child.text);
+                faults.push("Unknown type node: " + child.type);
         }
     }
 
@@ -96,8 +96,7 @@ const generateFunctions = (node: SyntaxNode) => {
     if (node.type === "function_declarator") {
         const name = node.children.find((n) => n.type === "identifier")?.text;
         if (!name) {
-            faults++;
-            console.warn("Function without a name:", node.text);
+            faults.push("Function without name");
             return;
         }
 
@@ -123,9 +122,6 @@ const generateFunctions = (node: SyntaxNode) => {
 
                 returnType = extractType(decl)
             }
-            console.log(`Function: ${name} returns with children ${
-                decl.map((n) => n.text)
-            }`, returnType);
         }
 
 
@@ -183,4 +179,8 @@ export const { symbols: raylib } = dlopen(path, {
 
 const outputPath = "../src/bindings.ts";
 await writeFile(outputPath, generatedCode);
-console.log(`Generated ${functions.length} functions with ${faults} faults.`);
+console.log(`Generated ${functions.length} functions with ${faults.length} faults.`);
+
+for (const fault of faults) {
+    console.log(`${styleText("yellow", "warn")} ${fault}`);
+}

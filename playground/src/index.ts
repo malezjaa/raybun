@@ -1,13 +1,13 @@
-import {Window} from "../../src/window.ts";
-import {Color} from "../../src/color.ts";
+import { Window } from "../../src/window.ts";
+import { Color } from "../../src/color.ts";
 
 const win = new Window("Hello, World!", 800, 600);
 
 win.setTargetFPS(60);
 
 win.mainLoop(() => {
-    win.clearBackground(Color.PINK)
-    win.drawText("Hello, World!", [10, 10], 20, Color.BLACK);
-})
+  win.clearBackground(Color.BEIGE);
+  win.drawText(`Current size: ${win.getRenderWidth()} x ${win.getScreenHeight()} ${win.isFullscreen()}`, [10, 10], 20, Color.BLACK);
+});
 
-win.close()
+win.close();

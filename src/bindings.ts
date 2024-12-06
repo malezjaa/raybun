@@ -34,5 +34,81 @@ export const {symbols: raylib} = dlopen(path, {
     SetTargetFPS: {
         args: [FFIType.i32],
         returns: FFIType.void
-    }
+    },
+    MaximizeWindow: {
+        args: [],
+        returns: FFIType.void,
+    },
+    MinimizeWindow: {
+        args: [],
+        returns: FFIType.void,
+    },
+    RestoreWindow: {
+        args: [],
+        returns: FFIType.void,
+    },
+    ToggleFullscreen: {
+        args: [],
+        returns: FFIType.void,
+    },
+    ToggleBorderlessWindowed: {
+        args: [],
+        returns: FFIType.void,
+    },
+    SetWindowMinSize: {
+        args: [FFIType.i32, FFIType.i32],
+        returns: FFIType.void,
+    },
+    SetWindowMaxSize: {
+        args: [FFIType.i32, FFIType.i32],
+        returns: FFIType.void,
+    },
+    SetWindowSize: {
+        args: [FFIType.i32, FFIType.i32],
+        returns: FFIType.void,
+    },
+    GetScreenWidth: {
+        args: [],
+        returns: FFIType.i32,
+    },
+    GetScreenHeight: {
+        args: [],
+        returns: FFIType.i32,
+    },
+    GetRenderWidth: {
+        args: [],
+        returns: FFIType.i32,
+    },
+    GetRenderHeight: {
+        args: [],
+        returns: FFIType.i32,
+    },
+    IsWindowReady: {
+        args: [],
+        returns: FFIType.bool,
+    },
+    IsWindowFullscreen: {
+        args: [],
+        returns: FFIType.bool,
+    },
+    IsWindowHidden: {
+        args: [],
+        returns: FFIType.bool,
+    },
+    IsWindowMinimized: {
+        args: [],
+        returns: FFIType.bool,
+    },
+    IsWindowMaximized: {
+        args: [],
+        returns: FFIType.bool,
+    },
+    IsWindowFocused: {
+        args: [],
+        returns: FFIType.bool,
+    },
+    IsWindowResized: {
+        args: [],
+        returns: FFIType.bool,
+    },
 });
